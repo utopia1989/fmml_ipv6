@@ -42,4 +42,4 @@ def write_m3u_file(content, filename="aptv.m3u"):
 if __name__ == "__main__":
     iptv_content = get_iptv_list()
     m3u_content = parse_iptv_list(iptv_content)
-    write_m3u_file(m3u_content, "iptv-github/aptv.m3u")
+    write_m3u_file(m3u_content, "aptv.m3u")
