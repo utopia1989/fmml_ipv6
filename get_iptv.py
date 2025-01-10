@@ -1,4 +1,5 @@
 import requests
+import os
 
 def get_iptv_list():
     url = "https://m3u.ibert.me/txt/fmml_ipv6.txt"
@@ -35,11 +36,27 @@ def parse_iptv_list(content):
                     m3u_content += f'{channel_url}\n'
     return m3u_content
 
+def get_current_content(filename="aptv.m3u"):
+    if os.path.exists(filename):
+        with open(filename, "r", encoding="utf-8") as f:
+            return f.read()
+    return ""
+
 def write_m3u_file(content, filename="aptv.m3u"):
     with open(filename, "w", encoding="utf-8") as f:
         f.write(content)
 
+def main():
+    filename = "aptv.m3u"
+    old_content = get_current_content(filename)
+    new_iptv_content = get_iptv_list()
+    new_m3u_content = parse_iptv_list(new_iptv_content)
+    
+    if new_m3u_content != old_content:
+        write_m3u_file(new_m3u_content, filename)
+        return True
+    return False
+
 if __name__ == "__main__":
-    iptv_content = get_iptv_list()
-    m3u_content = parse_iptv_list(iptv_content)
-    write_m3u_file(m3u_content, "aptv.m3u")
+    has_updates = main()
+    exit(0 if has_updates else 1)
