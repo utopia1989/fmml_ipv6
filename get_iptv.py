@@ -2,38 +2,34 @@ import requests
 import os
 
 def get_iptv_list():
-    url = "https://m3u.ibert.me/txt/fmml_ipv6.txt"
+    url = "https://github.com/Kimentanm/aptv/blob/master/m3u/iptv.m3u"
     response = requests.get(url)
     response.raise_for_status()
     return response.text
 
+import re
+
 def parse_iptv_list(content):
-    target_channels = [
-        "CCTV-1_综合",
-        "CCTV-2_财经",
-        "CCTV-3_综艺",
-        "CCTV-4_中文国际",
-        "CCTV-5_体育",
-        "CCTV-6_电影",
-        "CCTV-7_国防军事",
-        "CCTV-8_电视剧",
-        "CCTV-9_纪录",
-        "CCTV-10_科教",
-        "CCTV-11_戏曲",
-        "CCTV-12_社会与法",
-        "CCTV-13_新闻",
-    ]
-    
     m3u_content = "#EXTM3U\n"
-    for line in content.splitlines():
-        for channel in target_channels:
-            if line.startswith(channel):
-                parts = line.split(",")
-                if len(parts) == 2:
-                    channel_name = parts[0]
-                    channel_url = parts[1]
-                    m3u_content += f'#EXTINF:-1 tvg-id="{channel_name.replace("-", "").replace("_", "")}" tvg-name="{channel_name.replace("_", "")}" group-title="央视IPV6",{channel_name.replace("_", "")}\n'
-                    m3u_content += f'{channel_url}\n'
+    target_channels = [
+        r'#EXTINF:-1 tvg-id="CCTV1" tvg-name="CCTV1" group-title="央视IPV6",CCTV1\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV2" tvg-name="CCTV2" group-title="央视IPV6",CCTV2\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV3" tvg-name="CCTV3" group-title="央视IPV6",CCTV3\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV4" tvg-name="CCTV4" group-title="央视IPV6",CCTV4\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV5" tvg-name="CCTV5" group-title="央视IPV6",CCTV5\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV6" tvg-name="CCTV6" group-title="央视IPV6",CCTV6\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV7" tvg-name="CCTV7" group-title="央视IPV6",CCTV7\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV8" tvg-name="CCTV8" group-title="央视IPV6",CCTV8\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV9" tvg-name="CCTV9" group-title="央视IPV6",CCTV9\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV10" tvg-name="CCTV10" group-title="央视IPV6",CCTV10\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV11" tvg-name="CCTV11" group-title="央视IPV6",CCTV11\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV12" tvg-name="CCTV12" group-title="央视IPV6",CCTV12\n(.*?)\n',
+        r'#EXTINF:-1 tvg-id="CCTV13" tvg-name="CCTV13" group-title="央视IPV6",CCTV13\n(.*?)\n',
+    ]
+    for channel_regex in target_channels:
+        match = re.search(channel_regex, content)
+        if match:
+            m3u_content += match.group(0)
     return m3u_content
 
 def get_current_content(filename="aptv.m3u"):
