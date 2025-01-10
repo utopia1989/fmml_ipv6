@@ -2,7 +2,7 @@ import requests
 import os
 
 def get_iptv_list():
-    url = "https://github.com/Kimentanm/aptv/blob/master/m3u/iptv.m3u"
+    url = "https://gh.aptv.app/https://raw.githubusercontent.com/Kimentanm/aptv/master/m3u/iptv.m3u"
     response = requests.get(url)
     response.raise_for_status()
     return response.text
